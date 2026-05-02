@@ -1,8 +1,74 @@
 # ACG 角色 LoRA 本機實驗專案
 
-這個專案用來整理「從 ACG 角色參考圖建立資料集、訓練角色 LoRA、再用 ComfyUI 產生新構圖」的本機流程。
+這個專案整理一套本機 ACG 角色 AI 圖流程：從角色參考圖建立資料集、撰寫 caption、訓練角色 LoRA，到使用 ComfyUI 產生新構圖。
 
 預設範圍：所有資料集、LoRA、產圖結果都只作為本機實驗使用，不公開、不外流。
+
+## 專案簡介
+
+| 項目 | 說明 |
+|---|---|
+| 主要用途 | 訓練與測試 ACG 角色 LoRA，並在本機產生角色圖片 |
+| 目前角色 | 朝武芳乃 / Tomotake Yoshino / Asatake Yoshino |
+| 主要 UI | ComfyUI |
+| 主要訓練工具 | kohya_ss / sd-scripts |
+| 主要模型架構 | SDXL / Pony XL 系 checkpoint |
+| 目標環境 | Windows 11、RTX 5080 16GB VRAM |
+
+## 技術架構
+
+這個專案的核心概念是：
+
+```txt
+角色參考圖
+  -> 篩選與整理資料集
+  -> 為每張圖撰寫 caption
+  -> 使用 SDXL checkpoint 訓練角色 LoRA
+  -> 在 ComfyUI 載入 checkpoint + LoRA
+  -> 使用 prompt / seed / KSampler 產生圖片
+  -> 評估角色相似度並調整
+```
+
+| 層級 | 技術 / 檔案 | 作用 |
+|---|---|---|
+| Base model | SDXL / Pony XL checkpoint | 主要產圖模型，決定整體畫風與模型能力 |
+| LoRA | `.safetensors` | 補充角色外觀或風格，不是獨立模型 |
+| Caption | `.txt` | 訓練時告訴模型圖片中有哪些角色特徵、服裝、姿勢 |
+| Prompt | 文字提示 | 產圖時描述想要的畫面 |
+| Negative prompt | 文字提示 | 產圖時描述要避免的問題 |
+| Seed | 數字 | 控制隨機起點，方便重現或比較圖片 |
+| Workflow | ComfyUI JSON | 保存節點式產圖流程 |
+
+## 使用工具
+
+| 工具 | 類型 | 本專案用途 |
+|---|---|---|
+| Python | 程式語言 / 執行環境 | 執行 ComfyUI、kohya_ss、資料處理腳本 |
+| PyTorch CUDA | GPU 運算套件 | 讓 Python AI 工具使用 NVIDIA GPU 加速 |
+| Git | 版本控制 | 管理專案文件、腳本與 workflow |
+| ComfyUI | 產圖 UI | 載入 checkpoint、LoRA、prompt、workflow 並產圖 |
+| kohya_ss | LoRA 訓練 GUI | 訓練角色 LoRA |
+| sd-scripts | LoRA 訓練腳本 | kohya_ss 底層常用訓練工具 |
+| Hugging Face | 模型來源 | 下載 checkpoint、LoRA 或相關模型 |
+| Civitai | 模型來源 | 下載社群動漫 checkpoint、LoRA 與參考 prompt |
+| PowerShell | Windows 命令列 | 啟動服務、檢查 port、搬移檔案、執行腳本 |
+
+## 常見名詞
+
+| 名詞 | 簡短說明 |
+|---|---|
+| Checkpoint | 主要模型檔，也常稱 base model。ComfyUI 透過 `CheckpointLoaderSimple` 載入。 |
+| SDXL | Stable Diffusion XL，常見的高解析產圖模型架構。 |
+| Pony XL | SDXL 生態中的社群模型分支，常用於動漫圖。 |
+| LoRA | 小型附加模型，用來學角色、服裝或畫風。需要搭配 checkpoint 使用。 |
+| Trigger word | 訓練 LoRA 時反覆放在 caption 裡的觸發詞，例如 `sksgirl`。 |
+| Caption | 訓練圖片旁的文字描述，通常是一張圖對一個 `.txt`。 |
+| Prompt | 產圖時輸入的正向描述。 |
+| Negative prompt | 產圖時輸入的反向描述，用來減少壞手、壞臉、浮水印等問題。 |
+| Seed | 產圖的隨機起點；固定 seed 可更容易比較不同模型或 prompt。 |
+| KSampler | ComfyUI 中實際執行擴散採樣的節點，控制 steps、CFG、sampler、scheduler 等參數。 |
+| VAE | 影像編碼/解碼模型，多數 checkpoint 內建可用 VAE。 |
+| Workflow | ComfyUI 的節點流程檔，通常是 JSON。 |
 
 ## 專案階段
 
@@ -10,21 +76,21 @@
    - 輸入：作品名稱、角色名稱、參考網址、使用者提供圖片或截圖。
    - 輸出：乾淨、已篩選、適合訓練的角色圖片資料集。
 
-2. 工具選擇
-   - 優先使用活躍、開源、可本機執行的工具。
-   - 將資料整理、caption、LoRA 訓練、產圖、姿勢控制與修圖流程分開處理。
+2. Caption 與訓練準備
+   - 為圖片撰寫 caption。
+   - 將角色身分、服裝、姿勢、表情等資訊分開描述。
 
-3. 訓練準備
-   - 建議方向：SDXL 動漫 checkpoint + 每個角色一個 LoRA。
-   - 建議訓練工具：kohya_ss GUI 或 kohya-ss/sd-scripts。
+3. LoRA 訓練
+   - 使用 kohya_ss / sd-scripts。
+   - 以 SDXL 或 Pony XL 系 checkpoint 作為訓練基底。
 
-4. 產圖流程
-   - 建議 UI：ComfyUI。
-   - 使用 LoRA 控制角色識別度，prompt 控制場景/表情/服裝，必要時再用 ControlNet/OpenPose 或 inpaint 修正。
+4. ComfyUI 產圖
+   - 載入 checkpoint 與 LoRA。
+   - 修改 prompt、negative prompt、seed、KSampler 參數。
 
-5. 評估
-   - 用固定 prompt、固定 seed、固定參數比較不同 checkpoint 或 LoRA。
-   - 評估角色相似度、構圖彈性、姿勢控制、破圖、過擬合等問題。
+5. 評估與迭代
+   - 比較角色相似度、髮色、眼睛、服裝、背景、手部品質與 prompt 遵循度。
+   - 視結果調整 prompt、換 checkpoint、調整 LoRA strength 或重新訓練。
 
 ## 重要文件
 
@@ -59,8 +125,13 @@ workflows/       ComfyUI workflow JSON
 logs/            筆記、訓練 log、評估紀錄
 ```
 
-## 推薦第一次執行方式
+## 第一次閱讀建議
 
-先在 `templates/character_intake.csv` 填入一個角色。從 30-80 張候選圖片開始，篩到 25-50 張乾淨圖片，訓練第一版 SDXL LoRA，再用 4-6 個 checkpoint 做比較。
+如果你是第一次接手：
+
+1. 先讀 `AGENTS.md`。
+2. 再讀 `docs/current_project_handoff.md`，了解目前狀態。
+3. 想理解整套流程，讀 `docs/character_ai_pipeline_sop.md`。
+4. 想查名詞與操作背景，讀 `docs/06_project_knowledge_notes.md`。
 
 目前本專案已完成朝武芳乃的第一輪資料整理、LoRA 訓練與 ComfyUI workflow。後續請先閱讀 `docs/current_project_handoff.md`。
