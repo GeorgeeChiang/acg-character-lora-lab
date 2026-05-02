@@ -1,0 +1,34 @@
+project_name: acg-ai-picture-character-lora
+default_use: local_experiment_only
+hardware:
+  gpu: RTX 5080
+  os: Windows
+model_plan:
+  base_model_family: SDXL anime
+  training_method: LoRA
+  generation_ui: ComfyUI
+  training_ui: kohya_ss
+dataset_defaults:
+  images_min: 25
+  images_target: 40
+  images_max_first_run: 80
+  trigger_token_placeholder: sksgirl
+  caption_style: booru_tags
+training_defaults:
+  resolution: 1024
+  fallback_resolution: 768
+  network_rank: 16
+  alternate_network_rank: 32
+  batch_size: 1
+  learning_rate: 0.0001
+  save_every_steps: 250
+  total_steps_start: 1200
+generation_defaults:
+  lora_strength_start: 0.7
+  lora_strength_range: [0.55, 0.9]
+  use_openpose_for_pose_tests: true
+policy:
+  scope: local_experiment_only
+  publish_dataset: false
+  publish_lora: false
+  publish_outputs: false

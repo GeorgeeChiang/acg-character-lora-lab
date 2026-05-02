@@ -1,0 +1,11 @@
+test_id,name,prompt,control,goal
+1,portrait_identity,"<trigger>, 1girl, close-up portrait, looking at viewer, gentle smile, ACG illustration",none,"Check face, hair, eyes"
+2,upper_body_character,"<trigger>, 1girl, upper body, standing in classroom, one hand on chest, soft morning light",none,"Check standard character pose"
+3,full_body,"<trigger>, 1girl, full body, standing, simple background, neutral pose",optional_openpose,"Check body and outfit"
+4,side_view,"<trigger>, 1girl, side view, looking away, wind blowing hair, outdoor walkway",none,"Check non-front identity"
+5,looking_back,"<trigger>, 1girl, looking back over shoulder, three-quarter view, evening street",optional_openpose,"Check camera flexibility"
+6,sitting_window,"<trigger>, 1girl, sitting by window, knees together, soft backlight, quiet room",optional_openpose,"Check seated pose"
+7,dynamic_motion,"<trigger>, 1girl, running, dynamic pose, hair flowing, school courtyard",openpose,"Check motion and artifacts"
+8,emotional_closeup,"<trigger>, 1girl, close-up, teary eyes, sad expression, night lighting",none,"Check expression range"
+9,outfit_variation,"<trigger>, 1girl, casual hoodie, city cafe, relaxed smile",none,"Check outfit flexibility"
+10,inpaint_repair,"<trigger>, 1girl, use failed hand or face sample, inpaint only damaged area",inpaint,"Check repair workflow"

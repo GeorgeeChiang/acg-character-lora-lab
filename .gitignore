@@ -1,0 +1,25 @@
+# Large/local data
+data/raw/
+data/selected/
+data/rejected/
+data/train/
+outputs/
+logs/
+
+# Model files
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+
+# Local caches
+__pycache__/
+.cache/
+.venv/
+venv/
+
+# OS/editor
+Thumbs.db
+.DS_Store
+.vscode/

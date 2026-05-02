@@ -1,0 +1,67 @@
+character_id: senren_banka_asatake_yoshino
+work_title: 千恋＊万花
+character_name: 朝武芳乃
+aliases:
+  - 朝武芳乃
+  - 朝武 芳乃
+  - ともたけ よしの
+  - Yoshino Tomotake
+trigger_token: sksgirl
+
+dataset:
+  raw_dir: data/raw/senren_banka_asatake_yoshino
+  selected_dir: data/selected/senren_banka_asatake_yoshino
+  rejected_dir: data/rejected/senren_banka_asatake_yoshino
+  train_dir: data/train/senren_banka_asatake_yoshino
+  selected_images: 28
+  rejected_images: 14
+  training_pairs: 28
+  caption_style: booru_tags
+  caption_prefix:
+    - sksgirl
+    - 朝武芳乃
+    - white hair
+    - blue eyes
+    - shrine maiden
+    - twintails
+
+training:
+  base_model_family: SDXL anime
+  base_model_path: C:/Users/dodo/ComfyUI/ComfyUI-master/models/checkpoints/Illustrious-XL-v0.1.safetensors
+  resolution: 1024
+  fallback_resolution: 768
+  network_dim: 16
+  network_alpha: 16
+  batch_size: 1
+  learning_rate: 0.0001
+  max_steps: 1200
+  save_every_steps: 250
+  lr_scheduler: cosine
+  warmup_steps: 0
+  mixed_precision: fp16
+  optimizer: AdamW8bit
+  gradient_accumulation_steps: 1
+  text_encoder_lr: 0.00005
+  unet_lr: 0.0001
+
+evaluation:
+  checkpoints:
+    - 800
+    - 1000
+    - 1200
+    - 1500
+  lora_strength_start: 0.7
+  lora_strength_range:
+    - 0.55
+    - 0.9
+  use_openpose_for_pose_tests: true
+
+generation:
+  ui: ComfyUI
+  tests_csv: logs/composition_tests_senren_banka_asatake_yoshino.csv
+  evaluation_csv: logs/checkpoint_evaluation_sheet_senren_banka_asatake_yoshino.csv
+
+notes:
+  - local_experiment_only
+  - open_source_first
+  - first_pass_only

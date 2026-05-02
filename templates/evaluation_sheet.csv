@@ -1,0 +1,2 @@
+character_id,checkpoint,test_id,seed,lora_strength,identity_1_5,prompt_follow_1_5,pose_1_5,face_1_5,hands_body_1_5,outfit_flex_1_5,overfit_risk_1_5,notes
+heroine_a,heroine_a-001200,1,12345,0.7,,,,,,,, 
