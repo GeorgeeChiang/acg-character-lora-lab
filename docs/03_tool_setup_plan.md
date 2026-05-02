@@ -1,91 +1,90 @@
-# Tool Setup Plan
+# 工具安裝規劃
 
-Target machine: Windows + NVIDIA RTX 5080.
+目標機器：Windows + NVIDIA RTX 5080。
 
-## Required Base Tools
+## 必要基礎工具
 
-Install first:
+先安裝：
 
-- NVIDIA driver: from NVIDIA official driver page.
-- Git for Windows: https://git-scm.com/download/win
-- Python: use the version required by each tool; A1111 commonly expects Python 3.10.x.
-- 7-Zip: useful for model/tool archives.
+- NVIDIA 驅動：從 NVIDIA 官方驅動頁下載。
+- Git for Windows：https://git-scm.com/download/win
+- Python：依各工具需求選版本；A1111 常見需求為 Python 3.10.x。
+- 7-Zip：用於解壓縮模型或工具包。
 
-## Generation Tools
+## 產圖工具
 
-Recommended:
+推薦：
 
-- ComfyUI Desktop or Windows Portable
-  - Source: https://github.com/Comfy-Org/ComfyUI
-  - Use for LoRA loading, ControlNet/OpenPose workflows, inpaint, and repeatable graph-based tests.
+- ComfyUI Desktop 或 Windows Portable
+  - 來源：https://github.com/Comfy-Org/ComfyUI
+  - 用途：載入 LoRA、ControlNet/OpenPose、inpaint，以及可重現的節點式測試。
 
-Alternative:
+替代：
 
 - AUTOMATIC1111 stable-diffusion-webui
-  - Source: https://github.com/AUTOMATIC1111/stable-diffusion-webui
-  - Use if a tabbed UI feels easier than ComfyUI nodes.
+  - 來源：https://github.com/AUTOMATIC1111/stable-diffusion-webui
+  - 用途：如果分頁式 UI 比 ComfyUI 節點更容易理解，可改用它。
 
-## Training Tools
+## 訓練工具
 
-Recommended:
+推薦：
 
 - kohya_ss GUI
-  - Source: https://github.com/bmaltais/kohya_ss
-  - Use for first SDXL LoRA training.
+  - 來源：https://github.com/bmaltais/kohya_ss
+  - 用途：第一版 SDXL LoRA 訓練。
 
-Advanced:
+進階：
 
 - kohya-ss/sd-scripts
-  - Source: https://github.com/kohya-ss/sd-scripts
-  - Use when you want reproducible command-line training.
+  - 來源：https://github.com/kohya-ss/sd-scripts
+  - 用途：需要可重現的命令列訓練時使用。
 
-## Captioning and Dataset Tools
+## Caption 與資料集工具
 
 - ComfyUI-WD14-Tagger
-  - Source: https://github.com/pythongosssss/ComfyUI-WD14-Tagger
-  - Put into ComfyUI `custom_nodes`.
+  - 來源：https://github.com/pythongosssss/ComfyUI-WD14-Tagger
+  - 放入 ComfyUI 的 `custom_nodes`。
 
 - Dataset Tag Editor
-  - Source: https://github.com/toshiaki1729/stable-diffusion-webui-dataset-tag-editor
-  - Good for editing many caption files.
+  - 來源：https://github.com/toshiaki1729/stable-diffusion-webui-dataset-tag-editor
+  - 適合批次編輯大量 caption 檔。
 
-- Spreadsheet review
-  - Use `templates/dataset_review_sheet.csv`.
-  - Best for keep/reject decisions and notes.
+- 試算表審查
+  - 使用 `templates/dataset_review_sheet.csv`。
+  - 最適合做保留/剔除決策與備註。
 
-## Model Sources
+## 模型來源
 
-Use models that fit the experiment goal and the selected UI.
+依實驗目標與 UI 選擇模型。
 
-- Hugging Face: common source for official/open model files.
-- Civitai: common source for community anime SDXL models and LoRAs.
-- ComfyUI model folders:
-  - Checkpoints: `ComfyUI/models/checkpoints/`
-  - LoRA: `ComfyUI/models/loras/`
-  - ControlNet: `ComfyUI/models/controlnet/`
-  - VAE: `ComfyUI/models/vae/`
+- Hugging Face：常見官方或開源模型檔來源。
+- Civitai：常見社群動漫 SDXL 模型與 LoRA 來源。
+- ComfyUI 模型資料夾：
+  - Checkpoints：`ComfyUI/models/checkpoints/`
+  - LoRA：`ComfyUI/models/loras/`
+  - ControlNet：`ComfyUI/models/controlnet/`
+  - VAE：`ComfyUI/models/vae/`
 
-## First Local Setup Order
+## 第一次本機設定順序
 
-1. Install NVIDIA driver, Git, Python, and 7-Zip.
-2. Install ComfyUI Desktop or Windows Portable.
-3. Download one anime SDXL checkpoint for local testing.
-4. Confirm ComfyUI can generate one image.
-5. Install ComfyUI-WD14-Tagger.
-6. Install kohya_ss GUI.
-7. Train one test LoRA from a small curated dataset.
-8. Load the LoRA in ComfyUI and run the 10-prompt test plan.
+1. 安裝 NVIDIA 驅動、Git、Python、7-Zip。
+2. 安裝 ComfyUI Desktop 或 Windows Portable。
+3. 下載一個動漫 SDXL checkpoint 做本機測試。
+4. 確認 ComfyUI 能成功產出一張圖。
+5. 安裝 ComfyUI-WD14-Tagger。
+6. 安裝 kohya_ss GUI。
+7. 用小型已整理資料集訓練一個測試 LoRA。
+8. 在 ComfyUI 載入 LoRA，執行 10 組 prompt 測試。
 
-## Suggested Initial LoRA Settings
+## 建議初始 LoRA 設定
 
-Use these as starting points, not final truth:
+以下只是起點，不是最終答案：
 
-- Model family: SDXL anime checkpoint
-- Resolution: 1024 if stable, otherwise 768
-- Network dim/rank: 16 or 32
-- Batch size: 1-2
-- Learning rate: around `1e-4`
-- Save every: 200-300 steps
-- Total steps: 800-2000
-- Test checkpoints: 800, 1000, 1200, 1500
-
+- 模型家族：SDXL anime checkpoint
+- 解析度：穩定時用 1024，不穩時用 768
+- Network dim/rank：16 或 32
+- Batch size：1-2
+- Learning rate：約 `1e-4`
+- Save every：200-300 steps
+- Total steps：800-2000
+- 測試 checkpoint：800、1000、1200、1500

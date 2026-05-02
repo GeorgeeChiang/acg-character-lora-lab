@@ -1,49 +1,49 @@
-# Data Collection Pipeline
+# 資料收集流程
 
-Goal: when the user provides an ACG work title, a character name, or both, collect candidate references, clean them, and select images suitable for a character LoRA dataset.
+目標：當使用者提供 ACG 作品名稱、角色名稱或兩者時，收集候選參考圖、清理資料，並挑選適合角色 LoRA 訓練的圖片。
 
-## Inputs
+## 輸入
 
-- Work title
-- Character name
-- Reference site, wiki URL, or search hint, if available
-- Whether the user has local images/screenshots
-- Intended use: local experiment only by default
+- 作品名稱
+- 角色名稱
+- 參考網站、wiki 網址或搜尋提示
+- 使用者是否已有本機圖片或截圖
+- 預設用途：僅限本機實驗
 
-## Agent-Assisted Collection
+## Agent 輔助收集方式
 
-Use agents/search as a research assistant, not as an automatic mass scraper.
+把 agent 或搜尋工具當成研究助手，不要當成自動大量爬蟲。
 
-1. Identify canonical character details
-   - Confirm original title, character spelling, aliases, romanization, and visual traits.
-   - Record reliable reference sources first when available.
+1. 確認角色標準資訊
+   - 確認原作名稱、角色拼法、別名、羅馬字、視覺特徵。
+   - 優先記錄可靠來源。
 
-2. Build a candidate source list
-   - Priority A: user-provided images/screenshots and high-quality reference pages.
-   - Priority B: public search results and image-board/wiki references.
-   - Prefer diverse poses, expressions, outfits, and angles over many near-duplicates.
+2. 建立候選來源清單
+   - 優先 A：使用者提供圖片、截圖、高品質參考頁。
+   - 優先 B：公開搜尋結果、圖片站、wiki 參考。
+   - 比起大量近似重複圖，更重視姿勢、表情、服裝與角度多樣性。
 
-3. Collect candidate images into `data/raw/<character_id>/`
-   - Keep source URL or local source note per image.
-   - Do not blindly scrape large archives.
+3. 將候選圖片放入 `data/raw/<character_id>/`
+   - 盡量保留來源網址或本機來源註記。
+   - 不要盲目大量下載整個圖庫。
 
-4. Remove unusable images
-   - Reject images with dialogue boxes, UI, watermarks, compression damage, other main characters, heavy effects, or tiny faces.
-   - Reject near-duplicates unless the expression or pose meaningfully changes.
+4. 移除不可用圖片
+   - 剔除含對話框、UI、浮水印、壓縮損壞、其他主角色、重特效或臉太小的圖片。
+   - 剔除近似重複圖，除非表情或姿勢有明顯差異。
 
-5. Crop and normalize
-   - Keep the character large in frame.
-   - Preserve full-body images when possible.
-   - Prefer PNG/WebP lossless conversion for training copies.
+5. 裁切與正規化
+   - 讓角色在畫面中足夠大。
+   - 可保留全身圖時優先保留。
+   - 訓練副本建議使用 PNG 或 WebP 等較乾淨格式。
 
 6. Caption
-   - Auto-caption with WD14 tagger, then manually edit.
-   - Always include one trigger token, for example `sksgirl`.
-   - Separate identity from variable traits such as clothing, pose, expression, and camera angle.
+   - 可先用 WD14 tagger 自動標註，再人工修正。
+   - 每張圖都要包含一個 trigger token，例如 `sksgirl`。
+   - 將角色身分與可變特徵分開描述，例如服裝、姿勢、表情、鏡頭角度。
 
-## Dataset Shape
+## 資料集結構
 
-Recommended local structure:
+建議本機結構：
 
 ```txt
 data/
@@ -55,37 +55,36 @@ data/
     001.txt
 ```
 
-## Selection Rules
+## 篩選規則
 
-Good first dataset:
+第一版資料集建議：
 
-- 25-50 clean images for one character
-- At least 8 face/portrait images
-- At least 8 upper-body images
-- At least 5 full-body or larger-pose images
-- Multiple expressions if available
-- Multiple angles if available
+- 單一角色 25-50 張乾淨圖片
+- 至少 8 張臉部或頭像圖
+- 至少 8 張上半身圖
+- 至少 5 張全身或大姿勢圖
+- 盡量包含多種表情
+- 盡量包含多種角度
 
-Risk signs:
+風險訊號：
 
-- Only one standing sprite with expression variants
-- Mostly screenshots with text boxes
-- Character is frequently occluded
-- Outfit never changes but user wants outfit changes later
+- 只有同一張立繪的表情差分
+- 大多是含文字框截圖
+- 角色常被遮擋
+- 訓練圖服裝完全不變，但使用者之後想要服裝變化
 
-## Human Review Gate
+## 人工審查關卡
 
-Before training, review every image with `templates/dataset_review_sheet.csv`.
+訓練前，使用 `templates/dataset_review_sheet.csv` 審查每張圖片。
 
-Required decisions:
+必要判斷：
 
-- Keep / reject
-- Main reason
-- Needed crop
-- Caption quality
-- Whether it looks too close to an original CG composition
+- 保留 / 剔除
+- 主要原因
+- 是否需要裁切
+- Caption 品質
+- 是否太接近原始 CG 構圖
 
-## Project Scope
+## 專案範圍
 
-All datasets, trained LoRA weights, and generated images are treated as local experiment artifacts and are not intended for external publication or sharing.
-
+所有資料集、訓練出的 LoRA 權重與生成圖片，都視為本機實驗產物，不以公開或外流為目的。

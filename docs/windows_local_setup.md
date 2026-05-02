@@ -1,30 +1,31 @@
-# Windows Local Setup
+# Windows 本機設定
 
-This repository is now set up for a local-only LoRA workflow on Windows 11.
+本 repository 已設定為 Windows 11 本機 LoRA 工作流程。
 
-## Completed
+## 已完成
 
-- Python 3.10.11 installed
-- 7-Zip installed
-- ComfyUI installed with a working CUDA venv
-- kohya_ss installed with a working CUDA venv
-- Illustrious-XL-v0.1 SDXL checkpoint downloaded to ComfyUI models
+- 已安裝 Python 3.10.11
+- 已安裝 7-Zip
+- 已安裝 ComfyUI，並有可使用 CUDA 的 venv
+- 已安裝 kohya_ss，並有可使用 CUDA 的 venv
+- 已將 `Illustrious-XL-v0.1` SDXL checkpoint 下載到 ComfyUI models 資料夾
 
-## Remaining
+## 仍可繼續確認
 
-- Start both GUIs once and verify they open
-- Run the first LoRA training pass
-- Run the 10 composition tests
-- Fine-tune captioning or dataset size if the first pass overfits
+- 啟動 ComfyUI 並確認可開啟
+- 啟動 kohya_ss GUI 並確認可開啟
+- 執行或重跑 LoRA 訓練
+- 執行 10 組構圖測試
+- 若第一版結果過擬合，再調整 caption 或資料集大小
 
-## Launch Helpers
+## 啟動輔助腳本
 
 - `scripts/start_comfyui.ps1`
 - `scripts/start_kohya_gui.ps1`
 
-## Suggested Working Paths
+## 建議工作路徑
 
-| Tool | Path |
+| 工具 | 路徑 |
 |---|---|
 | Python | `%LOCALAPPDATA%\\Programs\\Python\\Python310\\python.exe` |
 | 7-Zip | `%ProgramFiles%\\7-Zip\\7z.exe` |

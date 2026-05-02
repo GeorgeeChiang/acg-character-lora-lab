@@ -1,39 +1,38 @@
-# Agent Handoff Guide
+# Agent 交接指南
 
-Use this file when asking Codex or Claude to continue work in this repository.
+當使用者要請 Codex、Claude 或其他 agent 接續本 repository 的工作時，可參考本文件。
 
-## What To Provide
+## 使用者應提供的資訊
 
-- Work title
-- Character name
-- Optional aliases
-- Optional reference URLs
-- Whether the user already has local images
-- The current task stage
+- 作品名稱
+- 角色名稱
+- 可選：角色別名
+- 可選：參考網址
+- 使用者是否已有本機圖片
+- 目前任務階段
 
-## What The Agent Should Do
+## Agent 應該做什麼
 
-1. Read `AGENTS.md`.
-2. Read `README.md` and `configs/project.yaml`.
-3. Check the current intake row.
-4. Produce the next artifact only.
-5. Leave notes in `logs/` when a decision matters.
+1. 先讀 `AGENTS.md`。
+2. 再讀 `README.md`、`docs/current_project_handoff.md` 與 `configs/project.yaml`。
+3. 確認目前角色輸入資料。
+4. 一次只產出下一個明確 artifact。
+5. 如果做了重要決策，將紀錄留在 `logs/`。
 
-## Expected Artifacts
+## 預期 Artifact
 
-- source plan
-- candidate image review sheet
-- caption guidance
-- tool shortlist
-- 10 composition prompts
-- checkpoint evaluation sheet
+- 來源規劃
+- 候選圖片審查表
+- caption 指引
+- 工具候選清單
+- 10 組構圖 prompt
+- checkpoint 評估表
 
-## Response Format For Agents
+## Agent 回覆格式
 
-When an agent finishes, it should report:
+任務完成時應回報：
 
-- what it changed
-- where files are
-- what assumptions it made
-- what the next step should be
-
+- 改了什麼
+- 檔案在哪裡
+- 使用了哪些假設
+- 下一步應該做什麼
